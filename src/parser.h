@@ -49,6 +49,8 @@ void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser);
 
 void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser);
 
+void arp_parse(struct arp_header_s *arp_layer, struct Parser *parser);
+
 void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser);
 
 void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser);

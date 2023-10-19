@@ -271,12 +271,16 @@ int write_core(const struct core_write_config *config)
 				tv.tv_sec = tvns / NSEC_PER_SEC;
 				tv.tv_usec = (tvns % NSEC_PER_SEC) / 1000;
 
-                struct packet_context_s ps;
-                ps.packet = (uint8_t*)(bufptr->buf_addr);
-                struct Parser p = {ps, 0, 0};
+                // ================ cut packet header ================
 
-				//Truncate packet if needed
+                uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
+                struct packet_context_s ps;
+                ps.packet = _packet_data;
+                struct Parser p = {ps, 0, 0};
+                
 				packet_length = get_end_of_packet(&p);
+
+                // ===================================================
 
 				// Need to close existing file?
 				//

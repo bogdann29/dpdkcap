@@ -36,6 +36,10 @@ void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser)
     parser->count += sizeof(mpls_layer->ttl);
 }
 
+void arp_parse(struct arp_header_s *arp_layer, struct Parser *parser) {
+    parser->count += sizeof(struct arp_header_s);
+}
+
 void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
 {
     if (parser->flag)
@@ -229,7 +233,12 @@ uint32_t get_end_of_packet(struct Parser *parser)
             }
         }
     }
+    
     next = ((*((parser->packet_context).packet + parser->count)) & 0xF0) >> 4;
+    if (eth == 0x0806)
+    {
+        arp_parse(&(parser->packet_context).arp_header, parser);
+    }
 
     if (eth == ETHERTYPE_IP || next == 0x04)
     {
