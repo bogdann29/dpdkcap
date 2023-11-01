@@ -274,21 +274,21 @@ int write_core(const struct core_write_config *config)
 
                 // ================ cut packet header ================
 
-                uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
-                struct packet_context_s ps;
-                ps.packet = _packet_data;
-                struct Parser p = {ps, 0, 0};
+                // uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
+                // struct packet_context_s ps;
+                // ps.packet = _packet_data;
+                // struct Parser p = {ps, 0, 0};
                 
-				unsigned int header_len = get_end_of_packet(&p);
-				unsigned int payload_len = wire_packet_length - header_len;
-				packet_length = wire_packet_length;
+				// unsigned int header_len = get_end_of_packet(&p);
+				// unsigned int payload_len = wire_packet_length - header_len;
+				// packet_length = wire_packet_length;
 
-				if(payload_len >= HASH_LEN){
-					uint8_t buf[HASH_LEN];
-					sha256(_packet_data+header_len, buf, payload_len);
-					memcpy(_packet_data+header_len, buf, HASH_LEN);
-					packet_length = header_len + HASH_LEN;
-				}
+				// if(payload_len >= HASH_LEN){
+				// 	uint8_t buf[HASH_LEN];
+				// 	sha256(_packet_data+header_len, buf, payload_len);
+				// 	memcpy(_packet_data+header_len, buf, HASH_LEN);
+				// 	packet_length = header_len + HASH_LEN;
+				// }
 				
 
                 // ===================================================
@@ -389,6 +389,61 @@ int write_core(const struct core_write_config *config)
 					//Reset file size
 					task->output_size = written;
 				}
+				//Write block header
+				// TODO get better packet timestamps
+				header.timestamp = (int32_t) tv.tv_sec;
+				header.microseconds = (int32_t) tv.tv_usec;
+				header.packet_length = packet_length;
+				header.packet_length_wire = wire_packet_length;
+				written =
+				    file_write_func(task->output_buffer,
+						    &header,
+						    sizeof(struct
+							   pcap_packet_header));
+				if (unlikely(written < 0)) {
+					retval = -1;
+					goto cleanup;
+				}
+				task->output_size += written;
+
+				//Write content
+				remaining_bytes = packet_length;
+				compressed_length = 0;
+				while (bufptr != NULL && remaining_bytes > 0) {
+					bytes_to_write =
+					    MIN(rte_pktmbuf_data_len(bufptr),
+						remaining_bytes);
+					written =
+					    file_write_func(task->output_buffer,
+							    rte_pktmbuf_mtod
+							    (bufptr, void *),
+							    bytes_to_write);
+					if (unlikely(written < 0)) {
+						retval = -1;
+						goto cleanup;
+					}
+					bufptr = bufptr->next;
+					remaining_bytes -= bytes_to_write;
+					compressed_length += written;
+					task->output_size += written;
+				}
+
+				uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
+                struct packet_context_s ps;
+                ps.packet = _packet_data;
+                struct Parser p = {ps, 0, 0};
+                
+				unsigned int header_len = get_end_of_packet(&p);
+				unsigned int payload_len = wire_packet_length - header_len;
+				packet_length = wire_packet_length;
+
+				if(payload_len >= HASH_LEN){
+					uint8_t buf[HASH_LEN];
+					sha256(_packet_data+header_len, buf, payload_len);
+					memcpy(_packet_data+header_len, buf, HASH_LEN);
+					packet_length = header_len + HASH_LEN;
+				}
+
 				//Write block header
 				// TODO get better packet timestamps
 				header.timestamp = (int32_t) tv.tv_sec;
