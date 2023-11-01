@@ -160,6 +160,11 @@ static int close_lzo_pcap(struct lzowrite_buffer *buffer)
  */
 int write_core(const struct core_write_config *config)
 {
+	FILE* log_file;
+	if((log_file = fopen("log", "r")) == NULL){
+		printf("ploho\n");
+		return 0;
+	}
 	unsigned int packet_length, wire_packet_length, compressed_length;
 	unsigned int remaining_bytes;
 	int to_write;
@@ -402,6 +407,10 @@ int write_core(const struct core_write_config *config)
 					bytes_to_write =
 					    MIN(rte_pktmbuf_data_len(bufptr),
 						remaining_bytes);
+
+					if(bytes_to_write != remaining_bytes)
+
+
 					written =
 					    file_write_func(task->output_buffer,
 							    rte_pktmbuf_mtod
@@ -452,7 +461,7 @@ int write_core(const struct core_write_config *config)
 			task->output_buffer = NULL;
 		}
 	}
-
+	fclose(log_file);
 	RTE_LOG(INFO, DPDKCAP, "Closed writing core %d\n", rte_lcore_id());
 
 	return retval;
