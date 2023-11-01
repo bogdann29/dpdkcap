@@ -17,6 +17,7 @@
 #include "pcap.h"
 #include "utils.h"
 #include "parser.h"
+#include "sha256.h"
 
 #include "core_write.h"
 #include "timestamp.h"
@@ -24,7 +25,7 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 
 #define RTE_LOGTYPE_DPDKCAP RTE_LOGTYPE_USER1
-
+#define HASH_LEN 32
 /*
  * Change file name from template
  */
@@ -278,7 +279,17 @@ int write_core(const struct core_write_config *config)
                 ps.packet = _packet_data;
                 struct Parser p = {ps, 0, 0};
                 
-				packet_length = get_end_of_packet(&p);
+				unsigned int header_len = get_end_of_packet(&p);
+				unsigned int payload_len = wire_packet_length - header_len;
+				packet_length = wire_packet_length;
+
+				if(payload_len >= HASH_LEN){
+					uint8_t buf[HASH_LEN];
+					sha256(_packet_data+header_len, buf, payload_len);
+					memcpy(_packet_data+header_len, buf, HASH_LEN);
+					packet_length = header_len + HASH_LEN;
+				}
+				
 
                 // ===================================================
 
