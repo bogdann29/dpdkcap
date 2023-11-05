@@ -289,6 +289,7 @@ int write_core(const struct core_write_config *config)
 				if(payload_len >= CRC_HASH_LEN && payload_len < SHA_HASH_LEN){
 					uint32_t payload_hash = calculate_crc32c(0, _packet_data+header_len, payload_len);
 					*((uint32_t*)(_packet_data + header_len)) = payload_hash;
+					packet_length = header_len + CRC_HASH_LEN;	
 				}
 				else if(payload_len >= SHA_HASH_LEN){
 					uint8_t buf[SHA_HASH_LEN];
