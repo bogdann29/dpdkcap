@@ -145,7 +145,7 @@ struct tcp_header_s
     uint8_t sequence_number[4]; ///< Sequence Number
     uint8_t ack_number[4];      ///< Acknowledgment Number
 
-    uint8_t data_offser_and_reversed; ///< Reversed and Data offset
+    uint8_t data_offset_and_reversed; ///< Reversed and Data offset
     uint8_t flags;                    ///< TCP flags
 
     // #if defined(__LITTLE_ENDIAN__)

@@ -13,6 +13,8 @@ void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser)
 
     mac_layer->ethertype = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     parser->count += sizeof(mac_layer->ethertype);
+
+    parser->size += sizeof(struct mac_header_s);
 }
 
 void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser)
@@ -23,6 +25,8 @@ void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser)
     if (parser->flag)
         vlan_layer->tci = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     parser->count += sizeof(vlan_layer->tci);
+
+    parser->size += sizeof(struct vlan_header_s);
 }
 
 void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser)
@@ -34,10 +38,8 @@ void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser)
     if (parser->flag)
         mpls_layer->ttl = (parser->packet_context).packet[parser->count];
     parser->count += sizeof(mpls_layer->ttl);
-}
 
-void arp_parse(struct arp_header_s *arp_layer, struct Parser *parser) {
-    parser->count += sizeof(struct arp_header_s);
+    parser->size += sizeof(struct mpls_header_s);
 }
 
 void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
@@ -80,6 +82,9 @@ void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
     if (parser->flag)
         memcpy(ipv4_layer->dest_ip, (parser->packet_context).packet + parser->count, sizeof(ipv4_layer->dest_ip));
     parser->count += sizeof(ipv4_layer->dest_ip);
+
+    uint8_t hdrlen = ipv4_layer->ihl_and_version & 0xF;
+    parser->size += hdrlen*4;
 }
 
 void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
@@ -106,6 +111,8 @@ void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
     if (parser->flag)
         memcpy(ipv6_layer->dest_ip, (parser->packet_context).packet + parser->count, sizeof(ipv6_layer->dest_ip));
     parser->count += sizeof(ipv6_layer->dest_ip);
+
+    parser->size += sizeof(struct ipv6_header_s);
 }
 
 void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser)
@@ -126,8 +133,8 @@ void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser)
     parser->count += sizeof(tcp_layer->ack_number);
 
     if (parser->flag)
-        tcp_layer->data_offser_and_reversed = (parser->packet_context).packet[parser->count];
-    parser->count += sizeof(tcp_layer->data_offser_and_reversed);
+        tcp_layer->data_offset_and_reversed = (parser->packet_context).packet[parser->count];
+    parser->count += sizeof(tcp_layer->data_offset_and_reversed);
 
     if (parser->flag)
         tcp_layer->flags = (parser->packet_context).packet[parser->count];
@@ -144,6 +151,9 @@ void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser)
     if (parser->flag)
         tcp_layer->urgent_pointer = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     parser->count += sizeof(tcp_layer->urgent_pointer);
+
+
+    parser->size += ((tcp_layer->data_offset_and_reversed & 0xF0) >> 4) * 4;
 }
 
 void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser)
@@ -163,6 +173,8 @@ void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser)
     if (parser->flag)
         udp_layer->checksum = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     parser->count += sizeof(udp_layer->checksum);
+
+    parser->size += sizeof(struct udp_header_s);
 }
 
 void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser)
@@ -186,6 +198,8 @@ void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser)
     if (parser->flag)
         icmp_layer->sequence = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     parser->count += sizeof(icmp_layer->sequence);
+
+    parser->size += sizeof(struct icmp_header_s);
 }
 
 uint32_t get_end_of_packet(struct Parser *parser)
@@ -233,12 +247,7 @@ uint32_t get_end_of_packet(struct Parser *parser)
             }
         }
     }
-    
-    next = ((*((parser->packet_context).packet + parser->count)) & 0xF0) >> 4;
-    if (eth == 0x0806)
-    {
-        arp_parse(&(parser->packet_context).arp_header, parser);
-    }
+    next = ((*((parser->packet_context).packet + parser->size)) & 0xF0) >> 4;
 
     if (eth == ETHERTYPE_IP || next == 0x04)
     {
@@ -258,5 +267,5 @@ uint32_t get_end_of_packet(struct Parser *parser)
     else if (next == 0x11)
         udp_parse(&(parser->packet_context).udp_header, parser);
 
-    return parser->count;
+    return parser->size;
 }

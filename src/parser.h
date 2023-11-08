@@ -1,5 +1,5 @@
-#ifndef PARSER_H
-#define PARSER_H
+#ifndef SNIFFER_H
+#define SNIFFER_H
 
 // #include <stddef.h>
 #include <stdlib.h>
@@ -39,6 +39,7 @@ struct Parser{
     struct packet_context_s packet_context;
     int flag;      ///< flag indicates whether header fields need to be parsed
     uint32_t count; ///< number of parsed headers
+    uint32_t size;
 };
 
 uint32_t get_end_of_packet(struct Parser *parser);
@@ -48,8 +49,6 @@ void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser);
 void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser);
 
 void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser);
-
-void arp_parse(struct arp_header_s *arp_layer, struct Parser *parser);
 
 void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser);
 
@@ -61,4 +60,4 @@ void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser);
 
 void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser);
 
-#endif /* PARSER_H */
+#endif /* SNIFFER_H */
