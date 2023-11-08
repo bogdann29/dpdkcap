@@ -280,7 +280,7 @@ int write_core(const struct core_write_config *config)
                 uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
                 struct packet_context_s ps;
                 ps.packet = _packet_data;
-                struct Parser p = {{bytes},1,0,0};
+                struct Parser p = {{_packet_data},1,0,0};
                 
 				unsigned int header_len = get_end_of_packet(&p);
 				unsigned int payload_len = wire_packet_length - header_len;

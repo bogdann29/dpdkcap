@@ -1,5 +1,5 @@
-#ifndef SNIFFER_H
-#define SNIFFER_H
+#ifndef PARSER_H
+#define PARSER_H
 
 // #include <stddef.h>
 #include <stdlib.h>
@@ -40,6 +40,7 @@ struct Parser{
     int flag;      ///< flag indicates whether header fields need to be parsed
     uint32_t count; ///< number of parsed headers
     uint32_t size;
+    uint8_t *new_packet;
 };
 
 uint32_t get_end_of_packet(struct Parser *parser);
@@ -60,4 +61,4 @@ void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser);
 
 void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser);
 
-#endif /* SNIFFER_H */
+#endif /* PARSER_H */
