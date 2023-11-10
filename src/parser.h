@@ -35,9 +35,10 @@ struct packet_context_s
     struct icmp_header_s icmp_header;
 };
 
-struct Parser{
+struct Parser
+{
     struct packet_context_s packet_context;
-    int flag;      ///< flag indicates whether header fields need to be parsed
+    int flag;       ///< flag indicates whether header fields need to be parsed
     uint32_t count; ///< number of parsed headers
     uint32_t size;
     uint8_t *new_packet;
