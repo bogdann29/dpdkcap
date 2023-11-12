@@ -99,8 +99,13 @@ static int print_stats(__attribute__((unused)) struct rte_timer *timer, struct s
 	return 0;
 }
 
-static struct rte_timer stats_timer;
+static struct rte_timer stats_timer; /**< Static instance of the RTE timer. */
 
+/**
+ * @brief Starts displaying the statistics based on the provided data.
+ *
+ * @param data Pointer to the statistics data.
+ */
 void start_stats_display(struct stats_data *data)
 {
 	// Initialize timers

@@ -3,16 +3,23 @@
 #include <stdint.h>
 #include <string.h>
 
-const char *bytes_unit[] = { "B", "KB", "MB", "GB", "TB" };
-const char *nb_unit[] = { "k", "M", "G" };
+const char *bytes_unit[] = {"B", "KB", "MB", "GB", "TB"};
+const char *nb_unit[] = {"k", "M", "G"};
 
 char result[50];
 
+/**
+ * @brief Converts bytes to a human-readable format.
+ *
+ * @param bytes The number of bytes to be formatted.
+ * @return A string representing the formatted bytes.
+ */
 char *bytes_format(uint64_t bytes)
 {
 	int i;
 	double converted_bytes = bytes;
-	for (i = 0; i < 4 && bytes >= 1024; i++, bytes /= 1024) {
+	for (i = 0; i < 4 && bytes >= 1024; i++, bytes /= 1024)
+	{
 		converted_bytes = bytes / 1024.0;
 	}
 
@@ -20,11 +27,18 @@ char *bytes_format(uint64_t bytes)
 	return result;
 }
 
+/**
+ * @brief Formats an unsigned long integer to a human-readable format.
+ *
+ * @param nb The number to be formatted.
+ * @return A string representing the formatted unsigned long integer.
+ */
 char *ul_format(uint64_t nb)
 {
 	int i;
 	double converted_nb = nb;
-	for (i = 0; i < 4 && nb >= 1000; i++, nb /= 1000) {
+	for (i = 0; i < 4 && nb >= 1000; i++, nb /= 1000)
+	{
 		converted_nb = nb / 1000.0;
 	}
 	if (i > 0)
@@ -34,11 +48,20 @@ char *ul_format(uint64_t nb)
 	return result;
 }
 
+/**
+ * @brief Replaces occurrences of a substring with another substring in a given string.
+ *
+ * @param src The source string in which to perform the replacement.
+ * @param find The substring to be replaced.
+ * @param replace The substring to replace 'find' with.
+ * @return A pointer to the first occurrence of the 'find' substring in the 'src' string, or NULL if not found.s
+ */
 char *str_replace(const char *src, const char *find, const char *replace)
 {
 	int find_len, replace_len, src_left_length;
 	char *pos = strstr(src, find);
-	if (pos) {
+	if (pos)
+	{
 		find_len = strlen(find);
 		replace_len = strlen(replace);
 		src_left_length = strlen(pos + find_len) + 1;

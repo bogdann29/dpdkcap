@@ -26,6 +26,13 @@ static const uint32_t k[64] = {
     0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
 /*********************** FUNCTION DEFINITIONS ***********************/
+
+/**
+ * @brief Transforms the SHA-256 context using the given data block.
+ *
+ * @param ctx Pointer to the SHA256_CTX structure representing the current context.
+ * @param data Pointer to the data block to be transformed.
+ */
 void sha256_transform(SHA256_CTX *ctx, const uint8_t data[])
 {
     uint32_t a, b, c, d, e, f, g, h, i, j, t1, t2, m[64];
@@ -68,6 +75,11 @@ void sha256_transform(SHA256_CTX *ctx, const uint8_t data[])
     ctx->state[7] += h;
 }
 
+/**
+ * @brief Initializes the SHA-256 context.
+ *
+ * @param ctx Pointer to the SHA256_CTX structure to be initialized.
+ */
 void sha256_init(SHA256_CTX *ctx)
 {
     ctx->datalen = 0;
@@ -82,6 +94,13 @@ void sha256_init(SHA256_CTX *ctx)
     ctx->state[7] = 0x5be0cd19;
 }
 
+/**
+ * @brief Updates the SHA-256 hashing context with the given data.
+ *
+ * @param ctx Pointer to the SHA256_CTX structure representing the current context.
+ * @param data Pointer to the input data to be hashed.
+ * @param len Length of the input data in bytes.
+ */
 void sha256_update(SHA256_CTX *ctx, const uint8_t data[], size_t len)
 {
     uint32_t i;
@@ -99,6 +118,12 @@ void sha256_update(SHA256_CTX *ctx, const uint8_t data[], size_t len)
     }
 }
 
+/**
+ * @brief Finalizes the SHA-256 hashing process and retrieves the hash value.
+ *
+ * @param ctx Pointer to the SHA256_CTX structure representing the current context.
+ * @param hash Buffer to store the resulting hash value.
+ */
 void sha256_final(SHA256_CTX *ctx, uint8_t hash[])
 {
     uint32_t i;
@@ -147,6 +172,13 @@ void sha256_final(SHA256_CTX *ctx, uint8_t hash[])
     }
 }
 
+/**
+ * @brief Computes the SHA-256 hash of the input text.
+ *
+ * @param text Pointer to the input text to be hashed.
+ * @param buf Buffer to store the resulting hash value.
+ * @param length Length of the input text in bytes.
+ */
 void sha256(uint8_t *text, uint8_t *buf, size_t length)
 {
     SHA256_CTX ctx;

@@ -2,6 +2,12 @@
 #include <stdio.h>
 #include "parser.h"
 
+/**
+ * @brief etherner header parser with filling fields
+ *
+ * @param mac_layer link layer header structure pointer
+ * @param parser parser structure pointer
+ */
 void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -15,7 +21,7 @@ void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser)
         memcpy(mac_layer->src_mac, (parser->packet_context).packet + parser->count, sizeof(mac_layer->dest_mac));
     else if (parser->flag == 2)
         memset(mac_layer->src_mac, 0, sizeof(mac_layer->dest_mac));
-    
+
     parser->count += sizeof(mac_layer->dest_mac);
 
     mac_layer->ethertype = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
@@ -27,6 +33,12 @@ void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, mac_layer, parser->size - start);
 }
 
+/**
+ * @brief vlan header parser with filling fields
+ *
+ * @param mac_layer vlan header structure pointer
+ * @param parser parser structure pointer
+ */
 void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -44,6 +56,12 @@ void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, vlan_layer, parser->size - start);
 }
 
+/**
+ * @brief mpls header parser with filling fields
+ *
+ * @param mac_layer mpls header structure pointer
+ * @param parser parser structure pointer
+ */
 void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -61,6 +79,12 @@ void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, mpls_layer, parser->size - start);
 }
 
+/**
+ * @brief ipv4 header parser with filling fields
+ *
+ * @param mac_layer ipv4 header structure pointer
+ * @param parser parser structure pointer
+ */
 void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -103,7 +127,7 @@ void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
     if (parser->flag == 1)
         ipv4_layer->checksum = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     else if (parser->flag == 2)
-         ipv4_layer->checksum = 0;
+        ipv4_layer->checksum = 0;
     parser->count += sizeof(ipv4_layer->checksum);
 
     if (parser->flag == 1)
@@ -126,6 +150,12 @@ void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, ipv4_layer, parser->size - start);
 }
 
+/**
+ * @brief ipv6 header parser with filling fields
+ *
+ * @param mac_layer ipv6 header structure pointer
+ * @param parser parser structure pointer
+ */
 void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -166,6 +196,12 @@ void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, ipv6_layer, parser->size - start);
 }
 
+/**
+ * @brief tcp header parser with filling fields
+ *
+ * @param mac_layer tcp header structure pointer
+ * @param parser parser structure pointer
+ */
 void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -204,7 +240,7 @@ void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser)
         tcp_layer->window_size = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     else if (parser->flag == 2)
         tcp_layer->window_size = 0;
-    
+
     parser->count += sizeof(tcp_layer->window_size);
 
     if (parser->flag == 1)
@@ -224,6 +260,12 @@ void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, tcp_layer, parser->size - start);
 }
 
+/**
+ * @brief udp header parser with filling fields
+ *
+ * @param mac_layer udp header structure pointer
+ * @param parser parser structure pointer
+ */
 void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -259,6 +301,12 @@ void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, udp_layer, parser->size - start);
 }
 
+/**
+ * @brief icmp header parser with filling fields
+ *
+ * @param mac_layer icmp header structure pointer
+ * @param parser parser structure pointer
+ */
 void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser)
 {
     size_t start = parser->size;
@@ -295,16 +343,29 @@ void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser)
         memcpy(parser->new_packet + start, (void *)icmp_layer, parser->size - start);
 }
 
-void arp_parse(struct arp_header_s *arp_layer, struct Parser *parser) {
+/**
+ * @brief arp header parser with filling fields
+ *
+ * @param mac_layer arp header structure pointer
+ * @param parser parser structure pointer
+ */
+void arp_parse(struct arp_header_s *arp_layer, struct Parser *parser)
+{
     size_t start = parser->size;
     memcpy(arp_layer, (parser->packet_context).packet + parser->count, sizeof(struct arp_header_s));
     parser->count += sizeof(struct arp_header_s);
     parser->size += sizeof(struct arp_header_s);
 
-     if (parser->flag == 2)
+    if (parser->flag == 2)
         memcpy(parser->new_packet + start, arp_layer, parser->size - start);
 }
 
+/**
+ * @brief getting the length of the packet headers (levels 2-4)
+ *
+ * @param parser pointer to the structure of the parser (parsed package)
+ * @return uint32_t
+ */
 uint32_t get_end_of_packet(struct Parser *parser)
 {
     uint8_t next;
