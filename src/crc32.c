@@ -643,6 +643,15 @@ static const uint32_t sctp_crc_tableil8_o88[256] =
  * end of the CRC lookup table crc_tableil8_o88
  */
 
+/**
+ * @brief Calculate 64-bit CRC using CRC32C polynomial and a table-driven approach
+ *
+ * @param crc Initial CRC value
+ * @param p_buf Pointer to the input buffer
+ * @param length Length of the input buffer
+ * @param init_bytes Number of initial bytes to process separately
+ * @return Calculated CRC value
+ */
 static uint32_t
 crc32c_sb8_64_bit(uint32_t crc,
 				  const unsigned char *p_buf,
@@ -701,6 +710,14 @@ crc32c_sb8_64_bit(uint32_t crc,
 	return crc;
 }
 
+/**
+ * @brief Calculate 32-bit CRC using multitable approach
+ *
+ * @param crc32c Initial CRC value
+ * @param buffer Pointer to the input buffer
+ * @param length Length of the input buffer
+ * @return Calculated CRC value
+ */
 static uint32_t
 multitable_crc32c(uint32_t crc32c,
 				  const unsigned char *buffer,
@@ -716,6 +733,16 @@ multitable_crc32c(uint32_t crc32c,
 	return (crc32c_sb8_64_bit(crc32c, buffer, length, to_even_word));
 }
 
+/**
+ * @brief Calculate CRC32C checksum for the input buffer
+ *
+ * This function selects the appropriate method based on the length of the input buffer.
+ *
+ * @param crc32c Initial CRC value
+ * @param buffer Pointer to the input buffer
+ * @param length Length of the input buffer
+ * @return Calculated CRC value
+ */
 uint32_t
 calculate_crc32c(uint32_t crc32c,
 				 const unsigned char *buffer,
