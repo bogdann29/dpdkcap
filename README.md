@@ -3,41 +3,126 @@
 <p/>
 
 # DPDKCap
-DPDKCap is packet capture tool based on DPDK. It provides a multi-port,
-multi-core optimized capture with on the fly compression. Thus particularly
+DPDKCap is packet capture tool based on DPDK. It provides multi-port, multi-core 
+optimized capture with recording to PCAP files and on-the-fly compression. Thus particularly
 suiting captures at very high speeds (more than 10Gpbs).
 
-### Build status
-| Branch  | Status |
-|---|---|
-| Master | [![Build Status](https://api.travis-ci.org/dpdkcap/dpdkcap.svg?branch=master)](https://travis-ci.org/dpdkcap/dpdkcap) |
-| Develop | [![Build Status](https://api.travis-ci.org/dpdkcap/dpdkcap.svg?branch=develop)](https://travis-ci.org/dpdkcap/dpdkcap) |
+## Supported Operating Systems
+
+  - FreeBSD 10
+  - Fedora release 20
+  - Ubuntu 14.04 LTS
+  - Wind River Linux 6
+  - Red Hat Enterprise Linux 6.5
+  - SUSE Enterprise Linux 11 SP3
+
+  or later distributions
 
 ## 1. Installation and platform configuration
 
-### 1.1 Install DPDK
-
-Please DPDK installation instruction, either from the [DPDK quick start
-instructions](http://dpdk.org/doc/quick-start) or from your operating system
-specific [Getting started
-guide](http://dpdk.org/doc/guides/linux_gsg/build_dpdk.html).
-
-### 1.2 Install dependencies
-
-DPDKCap requires the following dependencies to be built:
-- libncurses-dev
-
-### 1.3 Build and Install DPDKCap
-
-To build DPDKCap, you first need to set `RTE_SDK` and `RTE_TARGET`.
+### 1.1 Preparation and Dependency Installation
 ```
-$ export RTE_SDK=... # Replace by your DPDK install directory
-$ export RTE_TARGET=x86_64-native-linuxapp-gcc # Replace by your target
+- Update the system and install updates:
+  sudo apt-get update && sudo apt-get upgrade -y
+- Install essential build tools (build-essential):
+  sudo apt-get install build-essential -y
+- Install Meson:
+  sudo apt-get install meson -y
+- Install pyelftools for working with ELF files:
+  sudo apt-get install python3-pyelftools -y
+- Install libnuma-dev library:
+  sudo apt-get install libnuma-dev -y
+- Install libncurses-dev library:
+  sudo apt-get install libncurses-dev -y
+- Install libpcap-dev library:
+  sudo apt-get install libpcap-dev -y
+- Install Python 3 and pip:
+  sudo apt-get install python3-pip -y
+  pip3 install meson ninja
+```
+### 1.2 DPDK Download, Configuration, and Build
+```
+- Change to the home directory:
+  cd ~
+- Download the DPDK version 23.07 archive:
+  wget https://fast.dpdk.org/rel/dpdk-23.07.tar.xz
+- Extract the downloaded file:
+  tar xJf dpdk-23.07.tar.xz
+- Remove the archive:
+  rm -rf dpdk-23.07.tar.xz
+- Change to the dpdk-23.07 directory:
+  cd dpdk-23.07
+- Configure the build using Meson:
+  sudo meson setup build
+- Change to the created build directory:
+  cd build
+- Build the project using Ninja:
+  sudo ninja
+- Install the built project:
+  sudo meson install
+- Update the dynamic library loader cache:
+  sudo ldconfig
 ```
 
-To build DPDKCap, run the following command into DPDKCap root directory:
+### 1.3 Bind interfaces
+
+#### View existing interfaces
+
 ```
-$ make
+dpdk-devbind.py -s
+```
+
+#### Output example
+```
+Network devices using kernel driver
+===================================
+0000:01:00.0 'I350 Gigabit Network Connection 1521' if=eno1 drv=igb unused=vfio-pci
+```
+
+#### Bind
+
+```
+dpdk-devbind --bind=vfio-pci <name>
+```
+
+#### Example
+```
+dpdk-devbind --bind=vfio-pci eno1
+-or
+dpdk-devbind --bind=vfio-pci 0000:01:00.0
+```
+
+### 1.4 Install dpdkcap
+
+#### System configure
+
+```
+export RTE_SDK=~/dpdk-23.07
+export RTE_TARGET=x86_64-native-linuxapp-gcc
+```
+#### \#/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+```
+1024
+```
+
+#### \#/etc/default/grub
+```
+...
+GRUB_CMDLINE_LINUX="default_hugepagesz=1G hugepagesz=1G hugepages=8"
+...
+```
+
+### 
+```
+sudo mkdir -p /dev/hugepages
+sudo mountpoint -q /dev/hugepages || sudo mount -t hugetlbfs nodev /dev/hugepages
+sudo mount -t hugetlbfs hugetlbfs /dev/hugepages -o pagesize=2M
+```
+
+```
+git clone https://github.com/bogdann29/dpdkcap.git
+cd dpdkcap
+make
 ```
 
 ## 2. Usage
@@ -56,6 +141,11 @@ cores allocation and the `--huge-dir` one for providing huge pages directory.
 To get a list of DPDKCap specific available options, run:
 ```
 # ./build/dpdkcap [EAL args] -- --help
+```
+
+### Example
+```
+sudo ./build/dpdkcap --huge-dir /dev/hugepages --no-telemetry
 ```
 
 ### 2.1 Selecting cores for capture
