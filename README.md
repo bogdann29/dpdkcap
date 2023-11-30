@@ -82,14 +82,14 @@ Network devices using kernel driver
 #### Bind
 
 ```
-dpdk-devbind --bind=vfio-pci <name>
+dpdk-devbind.py --bind=vfio-pci <name>
 ```
 
 #### Example
 ```
-dpdk-devbind --bind=vfio-pci eno1
+dpdk-devbind.py --bind=vfio-pci eno1
 -or
-dpdk-devbind --bind=vfio-pci 0000:01:00.0
+dpdk-devbind.py --bind=vfio-pci 0000:01:00.0
 ```
 
 ### 1.4 Install dpdkcap
