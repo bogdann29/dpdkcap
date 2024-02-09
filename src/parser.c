@@ -1,6 +1,58 @@
 #include <stdlib.h>
-#include <stdio.h>
 #include "parser.h"
+#include <endian.h>
+#include <stdio.h>
+
+void ip4_writer(uint8_t *ip_1, uint8_t *ip_2, FILE *file)
+{
+    char s[256];
+    sprintf(s, "%d.%d.%d.%d, %d.%d.%d.%d\n",
+            ip_1[0], ip_1[1], ip_1[2], ip_1[3], ip_2[0], ip_2[1], ip_2[2], ip_2[3]);
+    fwrite(s, sizeof(char), strlen(s), file);
+}
+
+void ip6_writer(uint16_t *ip_1, uint16_t *ip_2, FILE *file)
+{
+    char s[512];
+    sprintf(s, "%x:%x:%x:%x:%x:%x:%x:%x, %x:%x:%x:%x:%x:%x:%x:%x\n",
+            be16toh(ip_1[0]), be16toh(ip_1[1]), be16toh(ip_1[2]), be16toh(ip_1[3]), be16toh(ip_1[4]), be16toh(ip_1[5]), be16toh(ip_1[6]), be16toh(ip_1[7]),
+            be16toh(ip_2[0]), be16toh(ip_2[1]), be16toh(ip_2[2]), be16toh(ip_2[3]), be16toh(ip_2[4]), be16toh(ip_2[5]), be16toh(ip_2[6]), be16toh(ip_2[7]));
+    fwrite(s, sizeof(char), strlen(s), file);
+}
+
+void replace_ip4(struct Parser *parser)
+{
+    uint32_t *ip = (uint32_t *)((parser->packet_context).packet + parser->count);
+    uint32_t new_ip;
+
+    new_ip = hash_search(parser->map, *ip);
+    // not found in map
+    if (new_ip == 0)
+    {
+        new_ip = ++(*(parser->ip_idx));
+        hash_insert(parser->map, *ip, new_ip);
+        ip4_writer((uint8_t *)ip, (uint8_t *)(&new_ip), parser->mapping_file);
+    }
+
+    *ip = new_ip;
+}
+
+void replace_ip6(struct Parser *parser)
+{
+    __uint128_t *ip = (__uint128_t *)((parser->packet_context).packet + parser->count);
+    __uint128_t new_ip;
+
+    new_ip = hash_search128(parser->map128, *ip);
+    // not found in map
+    if (new_ip == 0)
+    {
+        new_ip = ++(*(parser->ip_idx));
+        hash_insert128(parser->map128, *ip, new_ip);
+        ip6_writer((uint16_t *)ip, (uint16_t *)(&new_ip), parser->mapping_file);
+    }
+
+    *ip = new_ip;
+}
 
 /**
  * @brief etherner header parser with filling fields
@@ -43,12 +95,12 @@ void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser)
 {
     size_t start = parser->size;
 
-    vlan_layer->tpid = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
-    parser->count += sizeof(vlan_layer->tpid);
-
     if (parser->flag)
         vlan_layer->tci = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
     parser->count += sizeof(vlan_layer->tci);
+
+    vlan_layer->tpid = ((uint16_t)(parser->packet_context).packet[parser->count] << 8) | (parser->packet_context).packet[parser->count + 1];
+    parser->count += sizeof(vlan_layer->tpid);
 
     parser->size += sizeof(struct vlan_header_s);
 
@@ -130,11 +182,17 @@ void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
         ipv4_layer->checksum = 0;
     parser->count += sizeof(ipv4_layer->checksum);
 
+    // replace src_ip
+    replace_ip4(parser);
+
     if (parser->flag == 1)
         memcpy(ipv4_layer->source_ip, (parser->packet_context).packet + parser->count, sizeof(ipv4_layer->source_ip));
     else if (parser->flag == 2)
         memset(ipv4_layer->source_ip, 0, sizeof(ipv4_layer->source_ip));
     parser->count += sizeof(ipv4_layer->source_ip);
+
+    // replace dst_ip
+    replace_ip4(parser);
 
     if (parser->flag == 1)
         memcpy(ipv4_layer->dest_ip, (parser->packet_context).packet + parser->count, sizeof(ipv4_layer->dest_ip));
@@ -177,11 +235,17 @@ void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
         ipv6_layer->hop_limit = 0;
     parser->count += sizeof(ipv6_layer->hop_limit);
 
+    // replace src_ip
+    replace_ip6(parser);
+
     if (parser->flag)
         memcpy(ipv6_layer->source_ip, (parser->packet_context).packet + parser->count, sizeof(ipv6_layer->source_ip));
     else if (parser->flag == 2)
         memset(ipv6_layer->source_ip, 0, sizeof(ipv6_layer->source_ip));
     parser->count += sizeof(ipv6_layer->source_ip);
+
+    // replace src_ip
+    replace_ip6(parser);
 
     if (parser->flag)
         memcpy(ipv6_layer->dest_ip, (parser->packet_context).packet + parser->count, sizeof(ipv6_layer->dest_ip));
@@ -377,6 +441,7 @@ uint32_t get_end_of_packet(struct Parser *parser)
         eth = (parser->packet_context).first_vlan_header.tpid;
         if (eth == ETHERTYPE_VLAN)
         {
+            printf("%d\n", eth);    
             vlan_parse(&(parser->packet_context).second_vlan_header, parser);
             eth = (parser->packet_context).second_vlan_header.tpid;
         }

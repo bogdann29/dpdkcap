@@ -19,6 +19,7 @@
 #include "parser.h"
 #include "sha256.h"
 #include "crc32.h"
+#include "hash_map.h"
 
 #include "core_write.h"
 #include "timestamp.h"
@@ -207,6 +208,14 @@ int write_core(const struct core_write_config *config)
 	int (*file_close_func)(void *);
 	int task_idx;
 
+	uint32_t ip_idx = 0;
+	struct hash_map mp;
+	struct hash_map128 mp128;
+
+	FILE *ip_file = fopen("ip.csv", "w");
+	map_initializer(&mp);
+	map_initializer128(&mp128);
+
 	// Init stats
 	*(config->stats) = (struct core_write_stats){
 		.core_id = rte_lcore_id(),
@@ -317,7 +326,7 @@ int write_core(const struct core_write_config *config)
 				uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
 				struct packet_context_s ps;
 				ps.packet = _packet_data;
-				struct Parser p = {{_packet_data}, 1, 0, 0};
+				struct Parser p = {{_packet_data}, ip_file, 1, 0, 0, &ip_idx, &mp, &mp128};
 
 				unsigned int header_len = get_end_of_packet(&p);
 				unsigned int payload_len = wire_packet_length - header_len;
