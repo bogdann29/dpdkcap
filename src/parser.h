@@ -39,10 +39,11 @@ struct Parser
 {
     struct packet_context_s packet_context;
     FILE *mapping_file;
-    int flag;         /**< flag indicates whether header fields need to be parsed */
-    uint32_t count;   /**< number of parsed bytes */
-    uint32_t size;    /**< total header size */
-    uint32_t *ip_idx; /**< new ip addr for replace */
+    int flag;               /**< flag indicates whether header fields need to be parsed */
+    uint32_t count;         /**< number of parsed bytes */
+    uint32_t size;          /**< total header size */
+    uint32_t *ip_idx;       /**< new ip4 addr for replace */
+    __uint128_t *ip_idx128; /**< new ip6 addr for replace */
     struct hash_map *map;
     struct hash_map128 *map128;
     uint8_t *new_packet; /**< new package with zeroed fields that could have been changed */

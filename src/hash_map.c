@@ -61,7 +61,7 @@ void hash_insert(struct hash_map *map, uint32_t key, uint32_t value)
 
 void hash_insert128(struct hash_map128 *map, __uint128_t key, __uint128_t value)
 {
-    uint32_t hash_idx = hash_function(key, map->capacity);
+    uint32_t hash_idx = hash_function128(key, map->capacity);
     struct node128 *newNode = (struct node128 *)malloc(sizeof(struct node128));
     set_node128(newNode, key, value);
 

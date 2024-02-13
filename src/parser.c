@@ -31,7 +31,7 @@ void replace_ip4(struct Parser *parser)
     {
         new_ip = ++(*(parser->ip_idx));
         hash_insert(parser->map, *ip, new_ip);
-        ip4_writer((uint8_t *)ip, (uint8_t *)(&new_ip), parser->mapping_file);
+        // ip4_writer((uint8_t *)ip, (uint8_t *)(&new_ip), parser->mapping_file);
     }
 
     *ip = new_ip;
@@ -46,9 +46,9 @@ void replace_ip6(struct Parser *parser)
     // not found in map
     if (new_ip == 0)
     {
-        new_ip = ++(*(parser->ip_idx));
+        new_ip = ++(*(parser->ip_idx128));
         hash_insert128(parser->map128, *ip, new_ip);
-        ip6_writer((uint16_t *)ip, (uint16_t *)(&new_ip), parser->mapping_file);
+        // ip6_writer((uint16_t *)ip, (uint16_t *)(&new_ip), parser->mapping_file);
     }
 
     *ip = new_ip;
@@ -441,7 +441,7 @@ uint32_t get_end_of_packet(struct Parser *parser)
         eth = (parser->packet_context).first_vlan_header.tpid;
         if (eth == ETHERTYPE_VLAN)
         {
-            printf("%d\n", eth);    
+            printf("%d\n", eth);
             vlan_parse(&(parser->packet_context).second_vlan_header, parser);
             eth = (parser->packet_context).second_vlan_header.tpid;
         }
