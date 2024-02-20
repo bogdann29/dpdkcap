@@ -38,7 +38,6 @@ struct packet_context_s
 struct Parser
 {
     struct packet_context_s packet_context;
-    FILE *mapping_file;
     int flag;               /**< flag indicates whether header fields need to be parsed */
     uint32_t count;         /**< number of parsed bytes */
     uint32_t size;          /**< total header size */
