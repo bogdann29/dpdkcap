@@ -1,8 +1,3 @@
-/**
- * @file core_write.h
- * @brief Contains structures and function prototypes for writing core
- */
-
 #ifndef DPDKCAP_CORE_WRITE_H
 #define DPDKCAP_CORE_WRITE_H
 
@@ -12,6 +7,11 @@
 
 #define DPDKCAP_OUTPUT_FILENAME_LENGTH 100
 #define DPDKCAP_WRITE_BURST_SIZE 256
+
+/**
+ * @file core_write.h
+ * @brief Contains structures and function prototype for writing core, writing packets in pcap
+ */
 
 /**
  * @struct core_write_config

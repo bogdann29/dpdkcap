@@ -132,9 +132,9 @@ struct arguments
 /**
  * @brief Parse matrix option
  *
- * Parses a matrix option string and populates a matrix with the parsed values
+ * Parses a matrix of RX descriptions option and populates a matrix with the parsed values
  *
- * @param arg The matrix option string
+ * @param arg RX description matrix
  * @param matrix Pointer to the matrix where parsed values will be stored
  * @param max_len Maximum length of the matrix
  * @return 0 on success, -EINVAL on error

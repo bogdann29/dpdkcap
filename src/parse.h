@@ -2,6 +2,12 @@
 #define DPDKCAP_PARSE_H
 
 /**
+ * @file parse.h
+ * @brief Definition of configuration parsing function
+ *
+ */
+
+/**
  * @brief Parses the configuration from a file descriptor and calls the callback function
  *
  * This function approximates the following regular expressions:

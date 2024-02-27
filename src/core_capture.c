@@ -47,11 +47,6 @@ uint32_t wait_link_up(const struct core_capture_config *config, bool wait)
 	return (link.link_speed);
 }
 
-/**
- * @brief Capture the traffic from the given port/queue tuple
- * @param config The capture configuration
- * @return 0 on success, -1 on failure
- */
 int capture_core(const struct core_capture_config *config)
 {
 	struct rte_mbuf *bufs[DPDKCAP_CAPTURE_BURST_SIZE];

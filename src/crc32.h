@@ -1,8 +1,12 @@
 #include <stdint.h>
-
 #include <sys/cdefs.h>
-
 #include <sys/param.h>
+
+/**
+ * @file crc32.h
+ * @brief Calculating cyclic redundancy check to hash packet data
+ *
+ */
 
 /**
  * @brief Calculate CRC32C checksum for the input buffer

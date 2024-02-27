@@ -5,6 +5,12 @@
 
 #define DPDKCAP_CAPTURE_BURST_SIZE 256
 
+/**
+ * @file core_capture.h
+ * @brief Waiting and receiving packets on the port and recording them in the ring
+ *
+ */
+
 /* Core configuration structures */
 /**
  * @struct core_capture_config

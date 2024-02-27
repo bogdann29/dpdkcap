@@ -30,8 +30,14 @@
 #define SHA_HASH_LEN 32
 #define CRC_HASH_LEN 4
 
-/*
- * Change file name from template
+/**
+ * @brief Change file name from template
+ * 
+ * @param filename variable into which the new file name will be written
+ * @param template template
+ * @param core_id core id
+ * @param file_count current file number
+ * @param file_start file creation time
  */
 static void format_from_template(char *filename,
 								 const char *template,

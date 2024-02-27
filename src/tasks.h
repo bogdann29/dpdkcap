@@ -1,3 +1,4 @@
+
 #ifndef DPDKCAP_TASKS_H
 #define DPDKCAP_TASKS_H
 
@@ -21,6 +22,12 @@
 #define DPDKCAP_OUTPUT_TEMPLATE_DEFAULT "output_" DPDKCAP_OUTPUT_TEMPLATE_TOKEN_CORE_ID
 
 #define DPDKCAP_OUTPUT_TEMPLATE_LENGTH 2 * DPDKCAP_OUTPUT_FILENAME_LENGTH
+
+/**
+ * @file tasks.h
+ * @brief Scanning, processing and filling in the structure of collection tasks
+ *
+ */
 
 /**
  * @brief Enumeration representing the possible states of a task.

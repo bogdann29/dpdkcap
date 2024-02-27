@@ -7,7 +7,14 @@
 #include "hash_map.h"
 
 /**
- * @brief Packet context structure.
+ * @file parser.h
+ * @brief Defining the package structure and header parsing functions
+ *
+ */
+
+/**
+ * @struct packet_context_s
+ * @brief Structure represents, in order, all possible packet headers that can be parsed
  *
  */
 struct packet_context_s
@@ -35,17 +42,22 @@ struct packet_context_s
     struct icmp_header_s icmp_header;
 };
 
+/**
+ * @struct Parser
+ * @brief Structure representing the packet parser in packet_context structure
+ *
+ */
 struct Parser
 {
     struct packet_context_s packet_context;
-    int flag;               /**< flag indicates whether header fields need to be parsed */
-    uint32_t count;         /**< number of parsed bytes */
-    uint32_t size;          /**< total header size */
-    uint32_t *ip_idx;       /**< new ip4 addr for replace */
-    __uint128_t *ip_idx128; /**< new ip6 addr for replace */
-    struct hash_map *map;
-    struct hash_map128 *map128;
-    uint8_t *new_packet; /**< new package with zeroed fields that could have been changed */
+    int flag;                   /**< flag indicates whether header fields need to be parsed */
+    uint32_t count;             /**< number of parsed bytes */
+    uint32_t size;              /**< total header size */
+    uint32_t *ip_idx;           /**< new ip4 addr for replace */
+    __uint128_t *ip_idx128;     /**< new ip6 addr for replace */
+    struct hash_map *map;       /**< table of correspondence between old and new IPv4 */
+    struct hash_map128 *map128; /**< table of correspondence between old and new IPv6 */
+    uint8_t *new_packet;        /**< new package with zeroed fields that could have been changed */
 };
 
 /**
@@ -57,7 +69,7 @@ struct Parser
 uint32_t get_end_of_packet(struct Parser *parser);
 
 /**
- * @brief etherner header parser with filling fields
+ * @brief Etherner header parser with filling fields
  *
  * @param mac_layer link layer header structure pointer
  * @param parser parser structure pointer
@@ -65,7 +77,7 @@ uint32_t get_end_of_packet(struct Parser *parser);
 void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser);
 
 /**
- * @brief vlan header parser with filling fields
+ * @brief Vlan header parser with filling fields
  *
  * @param mac_layer vlan header structure pointer
  * @param parser parser structure pointer
@@ -73,7 +85,7 @@ void ethernet_parse(struct mac_header_s *mac_layer, struct Parser *parser);
 void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser);
 
 /**
- * @brief mpls header parser with filling fields
+ * @brief MPLS header parser with filling fields
  *
  * @param mac_layer mpls header structure pointer
  * @param parser parser structure pointer
@@ -81,23 +93,23 @@ void vlan_parse(struct vlan_header_s *vlan_layer, struct Parser *parser);
 void mpls_parse(struct mpls_header_s *mpls_layer, struct Parser *parser);
 
 /**
- * @brief ipv4 header parser with filling fields
+ * @brief IPv4 header parser with filling fields
  *
- * @param mac_layer ipv4 header structure pointer
+ * @param mac_layer IPv4 header structure pointer
  * @param parser parser structure pointer
  */
 void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser);
 
 /**
- * @brief ipv6 header parser with filling fields
+ * @brief IPv6 header parser with filling fields
  *
- * @param mac_layer ipv6 header structure pointer
+ * @param mac_layer IPv6 header structure pointer
  * @param parser parser structure pointer
  */
 void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser);
 
 /**
- * @brief tcp header parser with filling fields
+ * @brief TCP header parser with filling fields
  *
  * @param mac_layer tcp header structure pointer
  * @param parser parser structure pointer
@@ -105,7 +117,7 @@ void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser);
 void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser);
 
 /**
- * @brief udp header parser with filling fields
+ * @brief UDP header parser with filling fields
  *
  * @param mac_layer udp header structure pointer
  * @param parser parser structure pointer
@@ -113,7 +125,7 @@ void tcp_parse(struct tcp_header_s *tcp_layer, struct Parser *parser);
 void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser);
 
 /**
- * @brief icmp header parser with filling fields
+ * @brief ICMP header parser with filling fields
  *
  * @param mac_layer icmp header structure pointer
  * @param parser parser structure pointer
@@ -121,7 +133,7 @@ void udp_parse(struct udp_header_s *udp_layer, struct Parser *parser);
 void icmp_parse(struct icmp_header_s *icmp_layer, struct Parser *parser);
 
 /**
- * @brief arp header parser with filling fields
+ * @brief ARP header parser with filling fields
  *
  * @param mac_layer arp header structure pointer
  * @param parser parser structure pointer

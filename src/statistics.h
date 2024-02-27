@@ -5,6 +5,12 @@
 #include "core_capture.h"
 
 /**
+ * @file statistics.h
+ * @brief Saving and displaying statistics
+ *
+ */
+
+/**
  * @brief Structure to hold the statistics data.
  */
 struct stats_data
@@ -22,7 +28,7 @@ struct stats_data
 
 /**
  * @brief Starts displaying the statistics based on the provided data.
- * 
+ *
  * @param data Pointer to the statistics data.
  */
 void start_stats_display(struct stats_data *data);

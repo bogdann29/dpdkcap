@@ -13,9 +13,9 @@
 
 #endif
 
-#define ETHERTYPE_VLAN 0x8100 /* IEEE 802.1Q VLAN tagging */
-#define ETHERTYPE_IP 0x0800   /* IP */
-#define ETHERTYPE_IPV6 0x86dd /* IP protocol version 6 */
+#define ETHERTYPE_VLAN 0x8100 /**< IEEE 802.1Q VLAN tagging */
+#define ETHERTYPE_IP 0x0800   /**< IP */
+#define ETHERTYPE_IPV6 0x86dd /**< IP protocol version 6 */
 
 #define ETHERTYPE_MPLS_UC 0x8847
 #define ETHERTYPE_MPLS_MC 0x8848
@@ -27,13 +27,19 @@
 #define IPv6_HEADER_PROTOCOL_ICMP 58
 
 /**
+ * @file net_headers.h
+ * @brief Definition of network protocol header structures
+ *
+ */
+
+/**
  * @brief MAC Header Structure
  */
 struct mac_header_s
 {
-    uint8_t dest_mac[6]; ///< Destination MAC Address
-    uint8_t src_mac[6];  ///< Source MAC Address
-    uint16_t ethertype;  ///< Ethertype FieldD
+    uint8_t dest_mac[6]; /**< Destination MAC Address */
+    uint8_t src_mac[6];  /**< Source MAC Address */
+    uint16_t ethertype;  /**< Ethertype FieldD */
 } __attribute__((packed));
 
 /**
@@ -41,8 +47,8 @@ struct mac_header_s
  */
 struct vlan_header_s
 {
-    uint16_t tpid; ///< Tag Protocol Identifier (TPID) - 0x8100 for VLAN tagging
-    uint16_t tci;  ///< Tag Control Information (TCI) - Contains VLAN ID and priority
+    uint16_t tpid; /**< Tag Protocol Identifier (TPID) - 0x8100 for VLAN tagging */
+    uint16_t tci;  /**< Tag Control Information (TCI) - Contains VLAN ID and priority */
 } __attribute__((packed));
 
 /**
@@ -71,15 +77,15 @@ struct mpls_header_s
  */
 struct arp_header_s
 {
-    uint16_t hardware_type;          ///< Hardware Type (e.g., Ethernet)
-    uint16_t protocol_type;          ///< Protocol Type (e.g., IPv4)
-    uint8_t hardware_length;         ///< Length of Hardware Address (Ethernet MAC: 6 bytes)
-    uint8_t protocol_length;         ///< Length of Protocol Address (IPv4: 4 bytes)
-    uint16_t operation;              ///< ARP Operation (Request or Reply)
-    uint8_t sender_hardware_addr[6]; ///< Sender's Hardware (MAC) Address
-    uint8_t sender_protocol_addr[4]; ///< Sender's Protocol (IP) Address
-    uint8_t target_hardware_addr[6]; ///< Target's Hardware (MAC) Address
-    uint8_t target_protocol_addr[4]; ///< Target's Protocol (IP) Address
+    uint16_t hardware_type;          /**< Hardware Type (e.g., Ethernet)*/
+    uint16_t protocol_type;          /**< Protocol Type (e.g., IPv4)*/
+    uint8_t hardware_length;         /**< Length of Hardware Address (Ethernet MAC: 6 bytes)*/
+    uint8_t protocol_length;         /**< Length of Protocol Address (IPv4: 4 bytes)*/
+    uint16_t operation;              /**< ARP Operation (Request or Reply)*/
+    uint8_t sender_hardware_addr[6]; /**< Sender's Hardware (MAC) Address*/
+    uint8_t sender_protocol_addr[4]; /**< Sender's Protocol (IP) Address*/
+    uint8_t target_hardware_addr[6]; /**< Target's Hardware (MAC) Address*/
+    uint8_t target_protocol_addr[4]; /**< Target's Protocol (IP) Address*/
 } __attribute__((packed));
 
 /**
@@ -99,15 +105,15 @@ struct ipv4_header_s
     //         header_length : 4; ///< Header Length (in 32-bit words)
     // #endif
 
-    uint8_t type_of_service;  ///< Type of Service
-    uint16_t total_length;    ///< Total Length (including header and data)
-    uint16_t identification;  ///< Identification
-    uint16_t fragment_offset; ///< Fragment Offset and Flags
-    uint8_t time_to_live;     ///< Time to Live
-    uint8_t protocol;         ///< Protocol (e.g., TCP, UDP)
-    uint16_t checksum;        ///< Header Checksum
-    uint8_t source_ip[4];     ///< Source IP Address
-    uint8_t dest_ip[4];       ///< Destination IP Address
+    uint8_t type_of_service;  /**< Type of Service */
+    uint16_t total_length;    /**< Total Length (including header and data) */
+    uint16_t identification;  /**< Identification */
+    uint16_t fragment_offset; /**< Fragment Offset and Flags */
+    uint8_t time_to_live;     /**< Time to Live */
+    uint8_t protocol;         /**< Protocol (e.g., TCP, UDP) */
+    uint16_t checksum;        /**< Header Checksum */
+    uint8_t source_ip[4];     /**< Source IP Address */
+    uint8_t dest_ip[4];       /**< Destination IP Address */
 } __attribute__((packed));
 
 /**
@@ -115,12 +121,12 @@ struct ipv4_header_s
  */
 struct ipv6_header_s
 {
-    uint8_t version_traffic_class_flow_label[4]; ///< Version, Traffic Class, and Flow Label
-    uint16_t payload_length;                     ///< Payload Length
-    uint8_t next_header;                         ///< Next Header
-    uint8_t hop_limit;                           ///< Hop Limit
-    uint8_t source_ip[16];                       ///< Source IPv6 Address
-    uint8_t dest_ip[16];                         ///< Destination IPv6 Address
+    uint8_t version_traffic_class_flow_label[4]; /**< Version, Traffic Class, and Flow Label */
+    uint16_t payload_length;                     /**< Payload Length */
+    uint8_t next_header;                         /**< Next Header */
+    uint8_t hop_limit;                           /**< Hop Limit */
+    uint8_t source_ip[16];                       /**< Source IPv6 Address */
+    uint8_t dest_ip[16];                         /**< Destination IPv6 Address */
 } __attribute__((packed));
 
 /**
@@ -128,11 +134,11 @@ struct ipv6_header_s
  */
 struct icmp_header_s
 {
-    uint8_t type;        ///< ICMP Message Type
-    uint8_t code;        ///< ICMP Message Code
-    uint16_t checksum;   ///< Checksum for Integrity Verification
-    uint16_t identifier; ///< Identifier (used in some ICMP messages)
-    uint16_t sequence;   ///< Sequence Number (used in some ICMP messages)
+    uint8_t type;        /**< ICMP Message Type */
+    uint8_t code;        /**< ICMP Message Code */
+    uint16_t checksum;   /**< Checksum for Integrity Verification */
+    uint16_t identifier; /**< Identifier (used in some ICMP messages) */
+    uint16_t sequence;   /**< Sequence Number (used in some ICMP messages) */
 } __attribute__((packed));
 
 /**
@@ -140,13 +146,13 @@ struct icmp_header_s
  */
 struct tcp_header_s
 {
-    uint16_t source_port;       ///< Source Port Number
-    uint16_t dest_port;         ///< Destination Port Number
-    uint8_t sequence_number[4]; ///< Sequence Number
-    uint8_t ack_number[4];      ///< Acknowledgment Number
+    uint16_t source_port;       /**< Source Port Number */
+    uint16_t dest_port;         /**< Destination Port Number */
+    uint8_t sequence_number[4]; /**< Sequence Number */
+    uint8_t ack_number[4];      /**< Acknowledgment Number */
 
-    uint8_t data_offset_and_reversed; ///< Reversed and Data offset
-    uint8_t flags;                    ///< TCP flags
+    uint8_t data_offset_and_reversed; /**< Reversed and Data offset */
+    uint8_t flags;                    /**< TCP flags */
 
     // #if defined(__LITTLE_ENDIAN__)
 
@@ -177,9 +183,9 @@ struct tcp_header_s
     //         FIN : 1;         ///< FIN (Finish Flag): Indicates the termination of the connection.
     // #endif
 
-    uint16_t window_size;    ///< Window Size
-    uint16_t checksum;       ///< Checksum
-    uint16_t urgent_pointer; ///< Urgent Pointer
+    uint16_t window_size;    /**< Window Size */
+    uint16_t checksum;       /**< Checksum */
+    uint16_t urgent_pointer; /**< Urgent Pointer */
 } __attribute__((packed));
 
 /**
@@ -187,10 +193,10 @@ struct tcp_header_s
  */
 struct udp_header_s
 {
-    uint16_t source_port; ///< Source Port Number
-    uint16_t dest_port;   ///< Destination Port Number
-    uint16_t length;      ///< Length of UDP Header + Data
-    uint16_t checksum;    ///< Checksum for Integrity Verification
+    uint16_t source_port; /**< Source Port Number */
+    uint16_t dest_port;   /**< Destination Port Number */
+    uint16_t length;      /**< Length of UDP Header + Data */
+    uint16_t checksum;    /**< Checksum for Integrity Verification */
 } __attribute__((packed));
 
 #endif /* NET_HEADERS_H */

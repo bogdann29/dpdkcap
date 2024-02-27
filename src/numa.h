@@ -1,3 +1,8 @@
+/**
+ * @file numa.h
+ * @brief Definition function for working with sockets
+ *
+ */
 
 /**
  * @brief Retrieves the stopper flag for a specified socket

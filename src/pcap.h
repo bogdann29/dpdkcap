@@ -5,6 +5,15 @@
 
 #define PCAP_SNAPLEN_DEFAULT 65535
 
+/**
+ * @file pcap.h
+ * @brief Definition of pcap file format structures and functions
+ */
+
+/**
+ * @struct pcap_header
+ * @brief Structure representing the header of a pcap file
+ */
 struct __attribute__((__packed__)) pcap_header
 {
 	uint32_t magic_number;	/**< Magic number */
@@ -29,7 +38,7 @@ struct pcap_packet_header
 };
 
 /**
- * @brief Initializes the pcap header with the provided snap length
+ * @brief Initialize the pcap header with the provided snap length
  *
  * @param header Pointer to the pcap_header structure to be initialized
  * @param snaplen Snap length value to be set in the header

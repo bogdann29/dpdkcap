@@ -4,6 +4,12 @@
 #include <stdint.h>
 
 /**
+ * @file utils.h
+ * @brief Utility functions for output formatting
+ *
+ */
+
+/**
  * @brief Converts bytes to a human-readable format.
  *
  * @param bytes The number of bytes to be formatted.

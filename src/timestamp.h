@@ -8,6 +8,12 @@
 #include <rte_time.h>
 
 /**
+ * @file timestamp.h
+ * @brief Definition functions for registering and retrieving timestamps
+ *
+ */
+
+/**
  * @brief Retrieves a pointer to the timestamp field in the given mbuf.
  *
  * @param mbuf Pointer to the rte_mbuf structure.
