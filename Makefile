@@ -43,6 +43,7 @@ endif
 endif
 
 CFLAGS += -DALLOW_EXPERIMENTAL_API
+# CFLAGS += "-std=c11"
 
 build/$(APP)-shared: $(SRCS-y) Makefile $(PC_FILE) | build
 	$(CC) $(CFLAGS) $(SRCS-y) -o $@ $(LDFLAGS) $(LDFLAGS_SHARED)

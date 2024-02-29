@@ -3,6 +3,10 @@
 #include <endian.h>
 #include <stdio.h>
 
+#ifndef __STDC_WANT_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__ 1
+#endif
+
 void ip4_writer(uint8_t *ip_1, uint8_t *ip_2, FILE *file)
 {
     char s[256];

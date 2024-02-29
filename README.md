@@ -39,32 +39,11 @@ suiting captures at very high speeds (more than 10Gpbs).
 - Install Python 3 and pip:
   sudo apt-get install python3-pip -y
   pip3 install meson ninja
-```
-### 1.2 DPDK Download, Configuration, and Build
-```
-- Change to the home directory:
-  cd ~
-- Download the DPDK version 23.07 archive:
-  wget https://fast.dpdk.org/rel/dpdk-23.07.tar.xz
-- Extract the downloaded file:
-  tar xJf dpdk-23.07.tar.xz
-- Remove the archive:
-  rm -rf dpdk-23.07.tar.xz
-- Change to the dpdk-23.07 directory:
-  cd dpdk-23.07
-- Configure the build using Meson:
-  sudo meson setup build
-- Change to the created build directory:
-  cd build
-- Build the project using Ninja:
-  sudo ninja
-- Install the built project:
-  sudo meson install
-- Update the dynamic library loader cache:
-  sudo ldconfig
+- Install dpdk library:
+  sudo apt-get install dpdk dpdk-dev
 ```
 
-### 1.3 Bind interfaces
+### 1.2 Bind interfaces
 
 #### View existing interfaces
 
@@ -92,7 +71,7 @@ dpdk-devbind.py --bind=vfio-pci eno1
 dpdk-devbind.py --bind=vfio-pci 0000:01:00.0
 ```
 
-### 1.4 Install dpdkcap
+### 1.3 Install dpdkcap
 
 #### System configure
 

@@ -44,6 +44,7 @@
 #endif
 #include <limits.h>
 #include <stddef.h>
+#include <string.h>
 #if defined(MINILZO_CFG_USE_INTERNAL_LZODEFS)
 
 #ifndef __LZODEFS_H_INCLUDED

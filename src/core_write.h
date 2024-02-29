@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include "tasks.h"
 
+#ifndef __STDC_WANT_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__ 1
+#endif
+
 #define DPDKCAP_OUTPUT_FILENAME_LENGTH 100
 #define DPDKCAP_WRITE_BURST_SIZE 256
 

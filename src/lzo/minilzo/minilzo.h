@@ -31,6 +31,12 @@
  *   http://www.oberhumer.com/opensource/lzo/
  */
 
+/**
+ * @file minilzo.h
+ * @brief lzo compressor
+ * 
+ */
+
 #ifndef __MINILZO_H_INCLUDED
 #define __MINILZO_H_INCLUDED 1
 

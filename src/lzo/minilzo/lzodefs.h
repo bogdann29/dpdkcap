@@ -25,6 +25,12 @@
    http://www.oberhumer.com/opensource/lzo/
  */
 
+/**
+ * @file lzodefs.h
+ * @brief lzo compression definitions
+ * 
+ */
+
 #ifndef __LZODEFS_H_INCLUDED
 #define __LZODEFS_H_INCLUDED 1
 

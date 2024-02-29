@@ -452,3 +452,9 @@ extern "C" {
 #endif
 #endif				/* already included */
 /* vim:set ts=4 sw=4 et: */
+
+/**
+ * @file lzoconf.h
+ * @brief lzo compression config
+ * 
+ */

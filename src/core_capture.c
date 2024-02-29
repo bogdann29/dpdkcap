@@ -1,3 +1,7 @@
+#ifndef __STDC_WANT_LIB_EXT1__
+#define __STDC_WANT_LIB_EXT1__ 1
+#endif
+
 #include <stdbool.h>
 #include <signal.h>
 #include <string.h>
