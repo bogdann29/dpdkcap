@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
+#include <errno.h>
 
 #include <rte_ring.h>
 #include <rte_lcore.h>
@@ -352,7 +353,7 @@ int write_core(const struct core_write_config *config)
 				{
 					uint8_t buf[SHA_HASH_LEN];
 					sha256(_packet_data + header_len, buf, payload_len);
-					memcpy(_packet_data + header_len, buf, SHA_HASH_LEN);
+					memmove(_packet_data + header_len, buf, SHA_HASH_LEN);
 					packet_length = header_len + SHA_HASH_LEN;
 				}
 
@@ -412,7 +413,7 @@ int write_core(const struct core_write_config *config)
 					// Update stats
 					config->stats->current_file_packets = 0;
 					config->stats->current_file_bytes = 0;
-					memcpy(config->stats->output_file,
+					memmove(config->stats->output_file,
 						   task->output_filename,
 						   DPDKCAP_OUTPUT_FILENAME_LENGTH);
 

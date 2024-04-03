@@ -211,7 +211,7 @@ int lzowrite(struct lzowrite_buffer *lzowrite_buffer, void *src, size_t len)
 		}
 	}
 
-	memcpy(&(lzowrite_buffer->buffer[lzowrite_buffer->length]), src, len);
+	memmove(&(lzowrite_buffer->buffer[lzowrite_buffer->length]), src, len);
 	lzowrite_buffer->length += len;
 cleanup:
 	return retval;

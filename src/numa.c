@@ -1,9 +1,15 @@
 #include <rte_lcore.h>
 #include <rte_memory.h>
 #include <rte_malloc.h>
+#include "numa.h"
 
 #define MAX_LSOCKS 20
 
+/**
+ * @struct lsock 
+ * @brief Structure for managing socket states in international operations
+ * 
+ */
 struct lsock
 {
 	int socket_id;			   /**< Socket ID */

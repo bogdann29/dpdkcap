@@ -105,7 +105,7 @@
     AC_C_CONST
 
  Checks for library functions
-    AC_CHECK_FUNCS(memcmp memcpy memmove memset)
+    AC_CHECK_FUNCS(memcmp memcpy_s memmove memset)
 
 
  Appendix D: Copyright

@@ -18,7 +18,7 @@ struct stats_data
 	struct rte_ring *ring;								  /**< Pointer to the ring data structure. */
 	struct core_write_stats **cores_stats_write_list;	  /**< Pointer to the list of core write statistics. */
 	struct core_capture_stats **cores_stats_capture_list; /**< Pointer to the list of core capture statistics. */
-	bool volatile *stop_condition;						  /**< Pointer to the list of core capture statistics. */
+	bool volatile *stop_condition;						  /**< Pointer to stop condition variable. */
 	unsigned int num_cores;								  /**< Number of cores. */
 	unsigned int *port_list;							  /**< Pointer to the list of ports. */
 	unsigned int port_list_size;						  /**< Size of the port list. */
