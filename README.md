@@ -24,21 +24,12 @@ suiting captures at very high speeds (more than 10Gpbs).
 ```
 - Update the system and install updates:
   sudo apt-get update && sudo apt-get upgrade -y
-- Install essential build tools (build-essential):
-  sudo apt-get install build-essential -y
-- Install Meson:
-  sudo apt-get install meson -y
-- Install pyelftools for working with ELF files:
-  sudo apt-get install python3-pyelftools -y
 - Install libnuma-dev library:
   sudo apt-get install libnuma-dev -y
 - Install libncurses-dev library:
   sudo apt-get install libncurses-dev -y
 - Install libpcap-dev library:
   sudo apt-get install libpcap-dev -y
-- Install Python 3 and pip:
-  sudo apt-get install python3-pip -y
-  pip3 install meson ninja
 - Install dpdk library:
   sudo apt-get install dpdk dpdk-dev
 ```
@@ -75,29 +66,25 @@ dpdk-devbind.py --bind=vfio-pci 0000:01:00.0
 
 #### System configure
 
-```
-export RTE_SDK=~/dpdk-23.07
-export RTE_TARGET=x86_64-native-linuxapp-gcc
-```
-#### \#/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+##### \#/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 ```
 1024
 ```
 
-#### \#/etc/default/grub
+##### \#/etc/default/grub
 ```
 ...
 GRUB_CMDLINE_LINUX="default_hugepagesz=1G hugepagesz=1G hugepages=8"
 ...
 ```
 
-### 
+####
 ```
 sudo mkdir -p /dev/hugepages
 sudo mountpoint -q /dev/hugepages || sudo mount -t hugetlbfs nodev /dev/hugepages
 sudo mount -t hugetlbfs hugetlbfs /dev/hugepages -o pagesize=2M
 ```
-
+###
 ```
 git clone https://github.com/bogdann29/dpdkcap.git
 cd dpdkcap
