@@ -188,7 +188,8 @@ void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
     parser->count += sizeof(ipv4_layer->checksum);
 
     // replace src_ip
-    replace_ip4(parser);
+    if (parser->anon_flag == 1)
+        replace_ip4(parser);
 
     if (parser->flag == 1)
         memmove(ipv4_layer->source_ip, (parser->packet_context).packet + parser->count, sizeof(ipv4_layer->source_ip));
@@ -197,7 +198,8 @@ void ipv4_parse(struct ipv4_header_s *ipv4_layer, struct Parser *parser)
     parser->count += sizeof(ipv4_layer->source_ip);
 
     // replace dst_ip
-    replace_ip4(parser);
+    if (parser->anon_flag == 1)
+        replace_ip4(parser);
 
     if (parser->flag == 1)
         memmove(ipv4_layer->dest_ip, (parser->packet_context).packet + parser->count, sizeof(ipv4_layer->dest_ip));
@@ -241,7 +243,8 @@ void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
     parser->count += sizeof(ipv6_layer->hop_limit);
 
     // replace src_ip
-    replace_ip6(parser);
+    if (parser->anon_flag == 1)
+        replace_ip6(parser);
 
     if (parser->flag)
         memmove(ipv6_layer->source_ip, (parser->packet_context).packet + parser->count, sizeof(ipv6_layer->source_ip));
@@ -250,7 +253,8 @@ void ipv6_parse(struct ipv6_header_s *ipv6_layer, struct Parser *parser)
     parser->count += sizeof(ipv6_layer->source_ip);
 
     // replace src_ip
-    replace_ip6(parser);
+    if (parser->anon_flag == 1)
+        replace_ip6(parser);
 
     if (parser->flag)
         memmove(ipv6_layer->dest_ip, (parser->packet_context).packet + parser->count, sizeof(ipv6_layer->dest_ip));

@@ -55,6 +55,7 @@ struct Parser
 {
     struct packet_context_s packet_context;
     int flag;                   /**< flag indicates whether header fields need to be parsed */
+    int anon_flag;              /**< flag indicates whether to anonymize ip */
     uint32_t count;             /**< number of parsed bytes */
     uint32_t size;              /**< total header size */
     uint32_t *ip_idx;           /**< new ip4 addr for replace */

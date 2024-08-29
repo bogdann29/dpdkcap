@@ -37,7 +37,7 @@
 
 /**
  * @brief Change file name from template
- * 
+ *
  * @param filename variable into which the new file name will be written
  * @param template template
  * @param core_id core id
@@ -337,24 +337,27 @@ int write_core(const struct core_write_config *config)
 				uint8_t *_packet_data = rte_pktmbuf_mtod(bufptr, uint8_t *);
 				struct packet_context_s ps;
 				ps.packet = _packet_data;
-				struct Parser p = {{_packet_data}, 1, 0, 0, &ip_idx, &ip_idx128, &mp, &mp128};
+				struct Parser p = {{_packet_data}, 1, task->anonymization, 0, 0, &ip_idx, &ip_idx128, &mp, &mp128};
 
 				unsigned int header_len = get_end_of_packet(&p);
 				unsigned int payload_len = wire_packet_length - header_len;
 				packet_length = wire_packet_length;
 
-				if (payload_len >= CRC_HASH_LEN && payload_len < SHA_HASH_LEN)
+				if (task->hash)
 				{
-					uint32_t payload_hash = calculate_crc32c(0, _packet_data + header_len, payload_len);
-					*((uint32_t *)(_packet_data + header_len)) = payload_hash;
-					packet_length = header_len + CRC_HASH_LEN;
-				}
-				else if (payload_len >= SHA_HASH_LEN)
-				{
-					uint8_t buf[SHA_HASH_LEN];
-					sha256(_packet_data + header_len, buf, payload_len);
-					memmove(_packet_data + header_len, buf, SHA_HASH_LEN);
-					packet_length = header_len + SHA_HASH_LEN;
+					if (payload_len >= CRC_HASH_LEN && payload_len < SHA_HASH_LEN)
+					{
+						uint32_t payload_hash = calculate_crc32c(0, _packet_data + header_len, payload_len);
+						*((uint32_t *)(_packet_data + header_len)) = payload_hash;
+						packet_length = header_len + CRC_HASH_LEN;
+					}
+					else if (payload_len >= SHA_HASH_LEN)
+					{
+						uint8_t buf[SHA_HASH_LEN];
+						sha256(_packet_data + header_len, buf, payload_len);
+						memmove(_packet_data + header_len, buf, SHA_HASH_LEN);
+						packet_length = header_len + SHA_HASH_LEN;
+					}
 				}
 
 				// ===================================================
@@ -414,8 +417,8 @@ int write_core(const struct core_write_config *config)
 					config->stats->current_file_packets = 0;
 					config->stats->current_file_bytes = 0;
 					memmove(config->stats->output_file,
-						   task->output_filename,
-						   DPDKCAP_OUTPUT_FILENAME_LENGTH);
+							task->output_filename,
+							DPDKCAP_OUTPUT_FILENAME_LENGTH);
 
 					RTE_LOG(INFO, DPDKCAP,
 							"Core %d task %d:%s writing to '%s'.\n",

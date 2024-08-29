@@ -37,6 +37,28 @@ void apply_taskkv(char *key, char *val, void *cbd)
 	{
 		strncpy(task->output_template, val, DPDKCAP_MAX_PATH_LEN);
 	}
+	else if (strcmp(key, "anonymization") == 0)
+	{
+		if (val)
+		{
+			task->anonymization = strtoul(val, NULL, 10);
+		}
+		else
+		{
+			task->anonymization = 999;
+		}
+	}
+	else if (strcmp(key, "hash") == 0)
+	{
+		if (val)
+		{
+			task->hash = strtoul(val, NULL, 10);
+		}
+		else
+		{
+			task->hash = 999;
+		}
+	}
 	else if (strcmp(key, "bpf") == 0)
 	{
 		strncpy(task->bpf_str, val, DPDKCAP_MAX_BPF_LEN);

@@ -67,6 +67,8 @@ struct task
 	struct rte_bpf *bpf;			   /**< BPF filter. */
 	int snaplen;					   /**< Packet snapshot length. */
 	int compression;				   /**< Compression flag. */
+	int hash;						   /**< Payload hashing flag. */
+	int anonymization;				   /**< IP addresses anonimization flag. */
 	int sampling;					   /**< Sampling flag. */
 };
 
