@@ -708,9 +708,10 @@ int main(int argc, char *argv[])
 			struct core_write_config *config =
 				cores_config_write_list[nb_lcores];
 			config->ring = write_ring;
-			config->stats = cores_stats_write_list[nb_lcores];
 			config->stop_condition =
 				get_stopper_for_socket(socket_id);
+			config->stats = cores_stats_write_list[nb_lcores];
+
 			config->taskdir =
 				rte_zmalloc_socket("CONFIG TASKDIR",
 								   sizeof(struct taskdir), 0,
