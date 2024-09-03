@@ -89,6 +89,8 @@ static struct argp_option options[] = {
 										"Use \"" DPDKCAP_OUTPUT_TEMPLATE_TOKEN_FILECOUNT "\" within the output "
 										"file template to index each new file.",
 	 0},
+	{"total_files_limit", 'l', "LIMIT", 0, "Summary files size limit.",
+	 0},
 	{"portmask", 'p', "PORTMASK", 0, "Ethernet ports mask (default: 0x1).",
 	 0},
 	{"snaplen", 's', "LENGTH", 0,
@@ -124,6 +126,7 @@ struct arguments
 	unsigned long snaplen;									   /**< Packet snapshot length */
 	unsigned long rotate_seconds;							   /**< File rotation interval in seconds */
 	uint64_t file_size_limit;								   /**< File size limit */
+	uint64_t total_files_size_limit;						   /**< Summary files size limit */
 	char *log_file;											   /**< Log file path */
 	char *taskdir;											   /**< Task directory */
 	int taskinterval;										   /**< Task execution interval */
@@ -288,6 +291,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		break;
 	case 's':
 		arguments->snaplen = strtoul(arg, &end, 10);
+		break;
+	case 'l':
+		arguments->total_files_size_limit = strtoul(arg, &end, 10);
 		break;
 	case 'G':
 		arguments->rotate_seconds = strtoul(arg, &end, 10);
@@ -530,6 +536,7 @@ int main(int argc, char *argv[])
 		.portmask = 0x1,
 		.rotate_seconds = 0,
 		.file_size_limit = 0,
+		.total_files_size_limit = 0,
 		.log_file = NULL,
 		.taskdir = NULL,
 		.taskinterval = 1,
@@ -701,14 +708,14 @@ int main(int argc, char *argv[])
 			struct core_write_config *config =
 				cores_config_write_list[nb_lcores];
 			config->ring = write_ring;
+			config->stats = cores_stats_write_list[nb_lcores];
 			config->stop_condition =
 				get_stopper_for_socket(socket_id);
-			config->stats = cores_stats_write_list[nb_lcores];
-
 			config->taskdir =
 				rte_zmalloc_socket("CONFIG TASKDIR",
 								   sizeof(struct taskdir), 0,
 								   socket_id);
+			config->limit_file_size = arguments.total_files_size_limit;
 			if (arguments.taskdir == NULL)
 			{
 				// add default task

@@ -27,6 +27,7 @@ struct core_write_config
 	bool volatile *stop_condition;	/**< Pointer to the stop condition flag */
 	struct core_write_stats *stats; /**< Pointer to the statistics structure */
 	struct taskdir *taskdir;		/**< Pointer to the task directory structure */
+	uint64_t limit_file_size;		/**< Summary files size limit */	
 };
 
 /**
