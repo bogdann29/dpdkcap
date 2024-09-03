@@ -21,6 +21,7 @@
 #include "lzo/lzowrite.h"
 #include "pcap.h"
 #include "utils.h"
+#include "numa.h"
 #include "parser.h"
 #include "sha256.h"
 #include "crc32.h"
@@ -242,6 +243,7 @@ int write_core(const struct core_write_config *config)
 	{
 		if (unlikely(*(config->stop_condition) && rte_ring_empty(config->ring)))
 		{
+			stop_all_sockets();
 			break;
 		}
 		// Get time
