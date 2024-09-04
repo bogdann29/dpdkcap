@@ -2,6 +2,11 @@
 #define DPDKCAP_UTILS_H
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
+#include "timestamp.h"
+
+#define FINISH_LOG_FILE_NAME "traffic_capture_finish_log.txt"
 
 /**
  * @file utils.h
@@ -34,5 +39,12 @@ char *ul_format(uint64_t);
  * @return A pointer to the first occurrence of the 'find' substring in the 'src' string, or NULL if not found.s
  */
 char *str_replace(const char *src, const char *find, const char *replace);
+
+/**
+ * @brief Print information about the program's completion
+ * 
+ * @param reason reason for termination 
+ */
+void print_finish_log(char* reason);
 
 #endif

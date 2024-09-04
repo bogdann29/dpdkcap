@@ -75,3 +75,16 @@ char *str_replace(const char *src, const char *find, const char *replace)
 	}
 	return pos;
 }
+
+/**
+ * @brief Print information about the program's completion
+ * 
+ * @param reason reason for termination 
+ */
+void print_finish_log(char* reason) {
+	FILE* f = fopen(FINISH_LOG_FILE_NAME, "w+");
+	char* tm = get_cur_ISO_time();
+	fprintf(f, "reason: %s\ntime: %s\n", reason, tm);
+	fclose(f);
+	free(tm);
+}

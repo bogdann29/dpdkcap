@@ -14,6 +14,7 @@
 #include <rte_malloc.h>
 
 #include "pcap.h"
+#include "utils.h"
 #include "numa.h"
 #include "core_write.h"
 #include "core_capture.h"
@@ -491,6 +492,7 @@ static void signal_handler(int sig)
 	RTE_LOG(NOTICE, DPDKCAP, "Caught signal %s on core %u%s\n",
 			strsignal(sig), rte_lcore_id(),
 			rte_get_main_lcore() == rte_lcore_id() ? " (MAIN CORE)" : "");
+	print_finish_log("termination signal");
 	stop_all_sockets();
 }
 

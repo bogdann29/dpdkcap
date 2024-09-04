@@ -241,10 +241,14 @@ int write_core(const struct core_write_config *config)
 
 	for (;;)
 	{
+		if (config->limit_file_size && config->stats->bytes > config->limit_file_size)
+		{
+			stop_all_sockets();
+			print_finish_log("memory exceeded");
+		}
 		if (unlikely(*(config->stop_condition) && rte_ring_empty(config->ring)) ||
 			(config->limit_file_size && config->stats->bytes > config->limit_file_size))
 		{
-			stop_all_sockets();
 			break;
 		}
 		// Get time

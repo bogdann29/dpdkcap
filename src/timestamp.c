@@ -37,3 +37,15 @@ void register_timestamp_dynfield()
 		rte_exit(1, "dynfield register failed");
 	}
 }
+
+/**
+ * @brief Get the current ISO time string 
+ * 
+ * @return char* 
+ */
+char* get_cur_ISO_time() {
+	time_t seconds = time(NULL);
+  	char* timeString = (char*)malloc(sizeof(DATE_TEMPLATE));
+  	strftime(timeString, sizeof(DATE_TEMPLATE), "%Y-%m-%dT%H:%M:%SZ+03:00", gmtime(&seconds));
+  	return timeString;
+}

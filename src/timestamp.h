@@ -7,6 +7,8 @@
 #include <rte_mbuf_dyn.h>
 #include <rte_time.h>
 
+#define DATE_TEMPLATE "yyyy-mm-ddThh:mm:ssZ+03:00"
+
 /**
  * @file timestamp.h
  * @brief Definition functions for registering and retrieving timestamps
@@ -26,5 +28,19 @@ uint64_t *timestamp_field(struct rte_mbuf *mbuf);
  *
  */
 void register_timestamp_dynfield();
+
+/**
+ * @brief Get the current ISO time string 
+ * 
+ * @return char* 
+ */
+char* get_cur_ISO_time();
+
+/**
+ * @brief Get the current ISO time string
+ *
+ * @return char*
+ */
+char *get_cur_ISO_time();
 
 #endif
